@@ -45,6 +45,7 @@ def Simple_DP(w,T):
     #             print(" ",end ='')
     #     print(" \n")
             
+#main
 w = [3,7,5,8,2] #重さリスト
 T = 9 #目的重量
 x = Simple_DP(w,T)
