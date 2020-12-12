@@ -1,7 +1,7 @@
 def Simple_DP(w,T):
     #変数定義・初期化
     n = len(w)
-    W = sum(w)
+    W = sum(w)ｓ
     w_max = max(w)
 
     #行列数設定
