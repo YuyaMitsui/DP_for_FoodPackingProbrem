@@ -47,7 +47,8 @@ def Lexico_DP(w,priority,T):
     #行列数設定
     # num_rows = T + w_max
     num_columns = n
-    num_rows = min(T + w_max - 1,W)
+    num_rows = min(T + w_max - 1,W) #計算範囲の短縮(Lexico_FDP)
+    
     #DPを行う二次元配列初期化
     #y:重さのDP表
     #z:優先度のDP表
@@ -112,7 +113,7 @@ def Lexico_DP(w,priority,T):
     #最適解xを出力
     return x
 
-#main
+#-------------------------main
 w = [3,7,5,8,2] #重さリスト
 priority = [5,5,1,1,3] #優先度リスト
 T = 9 #目的重量
