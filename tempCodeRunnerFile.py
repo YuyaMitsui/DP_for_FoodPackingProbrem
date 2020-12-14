@@ -1,10 +1,6 @@
-      # if DP_LIST_y[searchIDX - w[i]][i-1] == 1:
-            #     x[i] = 1
-            #     searchIDX -= w[i]
-            # if DP_LIST_y[searchIDX][i-1] == 1 and DP_LIST_y[searchIDX - w[i]][i-1] == 1:
-            #     if priority_v[searchIDX][i] >= priority_u[searchIDX][i]:        
-            #         x[i] = 1
-            #         searchIDX -= w[i]
-            # if priority_v[searchIDX][i] >= priority_u[searchIDX][i]:        
-            #         x[i] = 1
-            #         searchIDX -= w[i]
+blank_I = len(str(max(I))) + 4
+    # blank_w = len(str(max(Item_weight))) + 4
+    # blank_r = len(str(max(Item_remain_times))) + 4
+    # print("N"+" "*(blank_I-1)+"w"+" "*(blank_w-1)+"C"+" "*(blank_r-1))
+    # for i in range(Item_num):
+    #     print(str
