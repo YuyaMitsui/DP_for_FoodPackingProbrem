@@ -186,14 +186,14 @@ if __name__ == '__main__':
     T = 180 
     rand_min_w = 35
     rand_max_w = 55
-    # FoodPacking(repete_times,n,T,rand_min_w,rand_max_w)
+    FoodPacking(repete_times,n,T,rand_min_w,rand_max_w)
 
 
     w = [3,7,5,8,2] #重さリスト
     priority = [5,5,1,1,3] #優先度リスト
     T = 9 #目的重量
-    
+
     # Simple_FDP_result = Simple_DP(w,T)
     # print(Simple_FDP_result)
-    Lexico_FDP_result = Lexico_DP(w,priority,T)
-    print(Lexico_FDP_result)
+    # Lexico_FDP_result = Lexico_DP(w,priority,T)
+    # print(Lexico_FDP_result)
