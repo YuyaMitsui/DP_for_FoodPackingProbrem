@@ -52,7 +52,7 @@ def Lexico_DP(w,priority,T):
     # num_rows = T + w_max
     num_columns = n
     num_rows = min(T + w_max - 1,W) #計算範囲の短縮(Lexico_FDP)
-    
+
     #DPを行う二次元配列初期化
     #y:重さのDP表
     #z:優先度のDP表
@@ -88,25 +88,25 @@ def Lexico_DP(w,priority,T):
         if DP_LIST_y[i][num_columns-1] == 1: #最終列の目的重量を満たす解を見つける
             ansIDX = i
             break
-    
+
     #バックトラック
     x = [0 for i in range(n)]
     searchIDX = ansIDX
     for i in reversed(range(0,n)):
-        if searchIDX >= w[i]:    
-            if priority_v[searchIDX][i] >= priority_u[searchIDX][i]:        
+        if searchIDX >= w[i]:
+            if priority_v[searchIDX][i] >= priority_u[searchIDX][i]:
                 x[i] = 1
                 searchIDX -= w[i]
             else:
                 x[i] = 0
-    #debug 
+    #debug
     # for j in range(num_rows):
     #     for i in range(num_columns):
     #         print(DP_LIST_y[j][i],end ='')
     #         if(i != num_columns-1):
     #             print(" ",end ='')
     #     print(" \n")
-        
+
     # for j in range(num_rows):
     #     for i in range(num_columns):
     #         print(DP_LIST_z[j][i],end ='')
@@ -116,6 +116,7 @@ def Lexico_DP(w,priority,T):
     return x
 
 def FoodPacking(repete_times,n,T,rand_min_w,rand_max_w):
+
     #袋付め回数ごとに変化する変数
     w = [random.randint(rand_min_w,rand_max_w) for i in range(n)]
     priority = [0 for i in range(n)]
@@ -125,7 +126,7 @@ def FoodPacking(repete_times,n,T,rand_min_w,rand_max_w):
     Item_num = n
     Item_weight = [w[i] for i in range(n)]
     Item_remain_times =[0 for i in range(n)]
-    f = [] #f[i]: i回目の最適解の合計重量
+    sum_w = [] #f[i]: i回目の最適解の合計重量
     Match_cnt = 0
 
     start = time.time()
@@ -133,9 +134,17 @@ def FoodPacking(repete_times,n,T,rand_min_w,rand_max_w):
         #最適解を求める
         x = Lexico_DP(w,priority,T)
         #アイテムの追加・残留によるパラメータ更新
+        # print("選ばれたもの")
+        # print(x)
+        # print("重さ")
+        # print(w)
+        # print("優先度")
+        # print(priority)
+        # print()
+        
         opt_weight = 0
         for i in range(n):
-            if x[i] == 1: 
+            if x[i] == 1:
                 opt_weight += w[i]
                 #品が選ばれたので新しく追加する
                 Item_num += 1
@@ -145,55 +154,85 @@ def FoodPacking(repete_times,n,T,rand_min_w,rand_max_w):
                 w[i] = Item_weight[I[i]]
                 #残留回数のリストの枠を増やす
                 Item_remain_times.append(0)
+                #優先度初期化
+                priority[i] = 0
             else:
                 Item_remain_times[I[i]] += 1
                 priority[i] = Item_remain_times[I[i]]
-        f.append(opt_weight)
+        sum_w.append(opt_weight)
         if opt_weight == T:
             Match_cnt += 1
 
-    elapsed_time = time.time() - start
-    
-    Match_rate = Match_cnt / repete_times #最適解の合計重量 = Tだった割合
-    f_mean = sum(f)/len(f) #合計重量平均
-    ave_rememain = sum(Item_remain_times)/len(Item_remain_times) #平均残留回数
+    sum_w_mean = sum(sum_w)/len(sum_w) #合計重量平均
     max_remain = max(Item_remain_times) #最大残留回数
-    
+    mean_remain = sum(Item_remain_times)/len(Item_remain_times) #平均残留回数
+    Match_rate = Match_cnt / repete_times #最適解の合計重量 = Tだった割合
+    elapsed_time = time.time() - start #実行時間
+
+
     print("-条件-")
     print("ホッパ数: "+str(n))
     print("目的重量: "+str(T))
     print("袋詰め回数: "+str(repete_times))
     print("重量範囲: "+str(rand_min_w)+" ~ "+str(rand_max_w))
 
-    print("\n-結果-")
-    print("合計重量平均: "+str(f_mean))
-    print("最大残留回数: "+str(max_remain))
-    print("平均残留回数: "+str(ave_rememain))
-    print("最適解の重量=目的重量だった割合: "+str(Match_rate))
-    print("実行時間: "+str(elapsed_time))
+    # print("\n-結果-")
+    # print("処理した品数: "+str(Item_num))
+    # print("合計重量平均: "+str(sum_w_mean))
+    # print("最大残留回数: "+str(max_remain))
+    # print("平均残留回数: "+str(mean_remain))
+    # print("最適解の重量=目的重量だった割合: "+str(Match_rate))
+    # print("実行時間: "+str(elapsed_time))
+    result = {'Item_num':Item_num,'sum_w_mean':sum_w_mean,'max_remain':max_remain,'mean_remain':mean_remain,'Match_rate':Match_rate,'elapsed_time':elapsed_time}
+    return result
 
-    #表作成(あまり重要な処理じゃないです)
-    # blank_I = len(str(max(I))) + 4
-    # blank_w = len(str(max(Item_weight))) + 4
-    # blank_r = len(str(max(Item_remain_times))) + 4
-    # print("N"+" "*(blank_I-1)+"w"+" "*(blank_w-1)+"C"+" "*(blank_r-1))
-    # for i in range(Item_num):
-    #     print(str(i)+" "*(blank_I-len(str(i)))+str(Item_weight[i])+" "*(blank_w-len(str(Item_weight[i])))+str(Item_remain_times[i])+" "*(blank_r-len(str(Item_remain_times[i]))))
+def repetePacking(repete_times,n,T,rand_min_w,rand_max_w):
+    Item_numList = []
+    sum_w_meanList = []
+    max_remainList = []
+    mean_remainList = []
+    Match_rateList = []
+    elapsed_timeList = []
+
+    for i in range(10):
+      result =  FoodPacking(repete_times,n,T,rand_min_w,rand_max_w)
+      Item_numList.append(result['Item_num'])
+      sum_w_meanList.append(result['sum_w_mean'])
+      max_remainList.append(result['max_remain'])
+      mean_remainList.append(result['mean_remain'])
+      Match_rateList.append(result['Match_rate'])
+      elapsed_timeList.append(result['elapsed_time'])
+    
+    Ave_Itemnum = sum(Item_numList)/len(Item_numList)
+    Ave_sum_w_mean = sum(sum_w_meanList)/len(sum_w_meanList)
+    Ave_max_remain = sum(max_remainList)/len(max_remainList)
+    Ave_mean_remain = sum(mean_remainList)/len(mean_remainList)
+    Ave_Match_rate = sum(Match_rateList)/len(Match_rateList)
+    Ave_elapsed_time = sum(elapsed_timeList)/len(elapsed_timeList)
+    
+    print("\n-結果-")
+    print("\n10回実行して平均をとっています")
+    print("処理した品数: "+str(Ave_Itemnum))
+    print("合計重量平均: "+str(Ave_sum_w_mean))
+    print("最大残留回数: "+str(Ave_max_remain))
+    print("平均残留回数: "+str(Ave_mean_remain))
+    print("最適解の重量=目的重量だった割合: "+str(Ave_Match_rate))
+    print("実行時間: "+str(Ave_elapsed_time))
 
 if __name__ == '__main__':
     repete_times = 10000
     n = 10
-    T = 180 
-    rand_min_w = 35
-    rand_max_w = 55
-    FoodPacking(repete_times,n,T,rand_min_w,rand_max_w)
+    T = 900
+    rand_min_w = 175
+    rand_max_w = 275
+    repetePacking(repete_times,n,T,rand_min_w,rand_max_w)
 
 
-    w = [3,7,5,8,2] #重さリスト
-    priority = [5,5,1,1,3] #優先度リスト
-    T = 9 #目的重量
 
-    # Simple_FDP_result = Simple_DP(w,T)
-    # print(Simple_FDP_result)
+
+    #論文内の設定例での検証
+    # w = [3,7,5,8,2] #重さリスト
+    # priority = [5,5,1,1,3] #優先度リスト
+    # T = 9 #目的重量
     # Lexico_FDP_result = Lexico_DP(w,priority,T)
     # print(Lexico_FDP_result)
